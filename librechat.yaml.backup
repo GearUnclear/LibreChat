@@ -1,0 +1,55 @@
+version: 1.2.8
+cache: true
+
+modelSpecs:
+  list:
+    - name: "gpt-4o-clean"
+      label: "GPT-4o ($$)"
+      preset:
+        endpoint: "OpenRouter"
+        model: "openai/gpt-4o"
+    - name: "gpt-o3-clean"
+      label: "GPT o3 ($$)"
+      preset:
+        endpoint: "OpenRouter"
+        model: "openai/o3"
+    - name: "claude-4-sonnet-clean"
+      label: "Claude 4 Sonnet ($$)"
+      preset:
+        endpoint: "OpenRouter"
+        model: "anthropic/claude-sonnet-4"
+    - name: "claude-4-opus-clean"
+      label: "Claude 4 Opus ($$$$)"
+      preset:
+        endpoint: "OpenRouter"
+        model: "anthropic/claude-opus-4"
+    - name: "mistral-small-clean"
+      label: "Mistral Small (<$)"
+      preset:
+        endpoint: "OpenRouter"
+        model: "mistralai/mistral-small"
+    - name: "llama-3-70b-clean"
+      label: "Llama 3 70B Instruct (<$)"
+      preset:
+        endpoint: "OpenRouter"
+        model: "meta-llama/llama-3.3-70b-instruct"
+
+endpoints:
+  custom:
+    - name: "OpenRouter"
+      apiKey: "${OPENROUTER_KEY}"
+      baseURL: "https://openrouter.ai/api/v1"
+      models:
+        default: [
+          "openai/gpt-4o",
+          "anthropic/claude-sonnet-4",
+          "anthropic/claude-opus-4",
+          "mistralai/mistral-small",
+          "meta-llama/llama-3.3-70b-instruct",
+          "openai/o3"
+        ]
+        fetch: false
+      titleConvo: true
+      titleModel: "openai/gpt-4o"
+      dropParams: ["stop"]
+      modelDisplayLabel: "OpenRouter"
