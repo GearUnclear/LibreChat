@@ -107,6 +107,49 @@ balance:
 ```
 4. Restart the service
 
+## 👥 User Management
+
+### Listing Users
+```bash
+# List all users in the system
+docker exec LibreChat npm run list-users
+
+# View user statistics (conversations, messages)
+docker exec LibreChat npm run user-stats
+```
+
+### User Administration Commands
+```bash
+# Create a new user
+docker exec LibreChat npm run create-user
+
+# Reset a user's password
+docker exec LibreChat npm run reset-password
+
+# Ban a user
+docker exec LibreChat npm run ban-user
+
+# Delete a user
+docker exec LibreChat npm run delete-user
+
+# Invite a user (if registration is disabled)
+docker exec LibreChat npm run invite-user
+```
+
+### User Balance Management (if enabled)
+```bash
+# Add balance to a user
+docker exec LibreChat npm run add-balance
+
+# Set user balance
+docker exec LibreChat npm run set-balance
+
+# List all user balances
+docker exec LibreChat npm run list-balances
+```
+
+**Important**: All user management commands must be run inside the Docker container using `docker exec LibreChat` because the database connection and dependencies are only available within the container environment.
+
 ## 🗂️ File Locations
 
 ### Configuration Files
@@ -147,6 +190,25 @@ balance:
 #### 4. Container Won't Start
 **Symptom**: Container exits immediately
 **Solution**: Check logs with `docker logs LibreChat` and verify environment variables
+
+#### 5. User Management Commands Fail
+**Symptom**: "Cannot find module" errors when running user commands from host
+**Solution**: Always run user management commands inside the container:
+```bash
+# Wrong - from host
+npm run list-users
+
+# Correct - inside container
+docker exec LibreChat npm run list-users
+```
+
+#### 6. Create User Command Hangs
+**Symptom**: User creation prompt waits for input indefinitely
+**Solution**: Use non-interactive mode with piped input:
+```bash
+# If command hangs waiting for email verification prompt
+docker exec -i LibreChat sh -c "echo 'y' | npm run create-user email@example.com 'Name' 'username' 'password'"
+```
 
 ### Log Analysis
 ```bash
