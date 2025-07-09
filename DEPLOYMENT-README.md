@@ -35,6 +35,9 @@ docker-compose -f /opt/LibreChat/docker-compose.yml -f /opt/LibreChat/docker-com
 
 ### Restarting the Service
 ```bash
+# Quick container restart (LibreChat only)
+docker restart LibreChat
+
 # Full restart (recommended after config changes)
 docker-compose -f /opt/LibreChat/docker-compose.yml -f /opt/LibreChat/docker-compose.override.yml down
 docker-compose -f /opt/LibreChat/docker-compose.yml -f /opt/LibreChat/docker-compose.override.yml up -d
