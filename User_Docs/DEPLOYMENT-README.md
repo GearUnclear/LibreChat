@@ -58,16 +58,24 @@ docker logs LibreChat -f
 ## 📋 Current Configuration
 
 ### Model Specifications
-The deployment includes 6 pre-configured models via OpenRouter:
+The deployment includes 14 pre-configured models via OpenRouter:
 
-| Model | Context Tokens | Max Output | Temperature |
-|-------|---------------|------------|-------------|
-| GPT-4o | 128,000 | 4,096 | 0.7 |
-| GPT-o3 | 128,000 | 4,096 | 0.7 |
-| Claude 4 Sonnet | 200,000 | 64,000 | 0.7 |
-| Claude 4 Opus | 200,000 | 32,000 | 0.7 |
-| Mistral Small | 128,000 | 4,096 | 0.7 |
-| Llama 3 70B | 128,000 | 4,096 | 0.7 |
+| Model | Context Tokens | Max Output | Temperature | Status |
+|-------|---------------|------------|-------------|---------|
+| Mystery of the Week | 1,000,000 | 10,000 | 0.7 | FREE |
+| GPT-4o | 112,000 | 16,000 | 0.55 | Fixed tokens |
+| GPT-o3 | 112,000 | 16,000 | 0.55 | Fixed tokens |
+| Claude 4 Sonnet | 136,000 | 64,000 | 0.55 | Fixed tokens |
+| Claude 4 Opus (Analytical) | 168,000 | 32,000 | 0.3 | Fixed tokens |
+| Claude 4 Opus (Creative) | 168,000 | 32,000 | 0.7 | Fixed tokens |
+| Mistral Small | 128,000 | 4,096 | 0.55 | - |
+| Llama 3 70B | 128,000 | 4,096 | 0.55 | - |
+| Inflection 3 Pi | 7,000 | 1,000 | 0.55 | Fixed limits + Custom greeting |
+| Gemini 2.5 Pro | 934,000 | 66,000 | 0.7 | Fixed tokens |
+| Gemini 2.5 Flash | 936,000 | 64,000 | 0.7 | Fixed tokens |
+| Kimi K2 | 95,000 | 36,000 | 0.4 | Fixed tokens |
+| TEST/CYOA (Kimi) | 100,000 | 30,000 | 0.4 | Game prompt |
+| TEST/CYOA 2 (GPT-4o) | 120,000 | 8,000 | 0.4 | Game prompt |
 
 ### Key Configuration Settings
 - **User token limits**: DISABLED (`balance.enabled: false`)
@@ -178,23 +186,31 @@ docker exec LibreChat npm run list-balances
 
 ### Common Issues
 
-#### 1. Configuration Not Loading
+#### 1. Token Limit Errors
+**Symptom**: "Maximum context length exceeded" errors
+**Solution**: Verify model token limits don't exceed OpenRouter provider constraints. See [TOKEN-LIMITS-ISSUE.md](https://github.com/GearUnclear/LibreChat/blob/main/User_Docs/TOKEN-LIMITS-ISSUE.md) for details.
+
+#### 2. Model Display Names
+**Symptom**: Some models show proper names in chat (GPT-4o, Mistral) while others show "AI" or "OpenRouter"
+**Solution**: This is a LibreChat limitation. Only recognized providers (OpenAI, Mistral) show proper names. See [MODEL-DISPLAY-LABELS-ISSUE.md](https://github.com/GearUnclear/LibreChat/blob/main/User_Docs/MODEL-DISPLAY-LABELS-ISSUE.md) for details.
+
+#### 3. Configuration Not Loading
 **Symptom**: Logs show "ENOENT: no such file or directory, open '/app/librechat.yaml'"
 **Solution**: Ensure docker-compose.override.yml is included in the startup command
 
-#### 2. Model Not Available
+#### 4. Model Not Available
 **Symptom**: Model not showing in UI
 **Solution**: Check `modelSpecs.enforce: true` and verify model is in the list
 
-#### 3. Context Length Errors
+#### 5. Context Length Errors
 **Symptom**: "Maximum context length exceeded"
 **Solution**: Verify `maxContextTokens` is set correctly for the model
 
-#### 4. Container Won't Start
+#### 6. Container Won't Start
 **Symptom**: Container exits immediately
 **Solution**: Check logs with `docker logs LibreChat` and verify environment variables
 
-#### 5. User Management Commands Fail
+#### 7. User Management Commands Fail
 **Symptom**: "Cannot find module" errors when running user commands from host
 **Solution**: Always run user management commands inside the container:
 ```bash
@@ -205,7 +221,7 @@ npm run list-users
 docker exec LibreChat npm run list-users
 ```
 
-#### 6. Create User Command Hangs
+#### 8. Create User Command Hangs
 **Symptom**: User creation prompt waits for input indefinitely
 **Solution**: Use non-interactive mode with piped input:
 ```bash
@@ -319,5 +335,5 @@ Check `/opt/LibreChat/.env` for:
 
 ---
 
-**Last Updated**: 2025-07-08
+**Last Updated**: 2025-07-14
 **Deployment Path**: `/opt/LibreChat/`
