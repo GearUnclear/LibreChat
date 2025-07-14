@@ -1,0 +1,335 @@
+# LibreChat Configuration - Final Optimized Version
+# Timestamp: 2025-07-14 09:31:37
+# Status: Production - Pi Temperature Optimized (0.3), Test Variants Removed
+
+version: 1.2.8
+cache: true
+
+# Balance configuration for token credit management - DISABLED
+balance:
+  enabled: false
+
+modelSpecs:
+  enforce: true
+  prioritize: true
+  list:
+    - name: "mystery-of-the-week-clean"
+      label: "Mystery of The Week"
+      description: "FREE - A rotating collection of free models that changes weekly - you never know which one you'll get! 🎲"
+      preset:
+        endpoint: "OpenRouter"
+        model: "openrouter/cypher-alpha:free"
+        maxContextTokens: 1000000
+        max_tokens: 10000
+        temperature: 0.7
+    - name: "gpt-4o-clean"
+      label: "GPT-4o"
+      description: "$$ - OpenAI's flagship model that excels at writing, coding, and understanding images and text."
+      preset:
+        endpoint: "OpenRouter"
+        model: "openai/gpt-4o"
+        maxContextTokens: 112000
+        max_tokens: 16000
+        temperature: 0.55
+    - name: "gpt-o3-clean"
+      label: "GPT o3"
+      description: "$$ - OpenAI's newest model specialized for solving complex problems and mathematical questions."
+      preset:
+        endpoint: "OpenRouter"
+        model: "openai/o3"
+        maxContextTokens: 112000
+        max_tokens: 16000
+        temperature: 0.55
+    - name: "claude-4-sonnet-clean"
+      label: "Claude 4 Sonnet"
+      description: "$$$ - Anthropic's well-rounded model that's great for research, analysis, and thoughtful conversations."
+      preset:
+        endpoint: "OpenRouter"
+        model: "anthropic/claude-sonnet-4"
+        maxContextTokens: 136000
+        max_tokens: 64000
+        temperature: 0.55
+    - name: "claude-4-opus-clean"
+      label: "Claude 4 Opus (Analytical)"
+      description: "$$$$$$ - ✨ BEST FOR ANALYSIS ✨ Anthropic's most powerful model optimized for precise, focused analysis and detailed technical work (premium pricing)."
+      preset:
+        endpoint: "OpenRouter"
+        model: "anthropic/claude-opus-4"
+        maxContextTokens: 168000
+        max_tokens: 32000
+        temperature: 0.3
+    - name: "claude-4-opus-creative-clean"
+      label: "Claude 4 Opus (Creative)"
+      description: "$$$$$$ - ✨ BEST FOR CREATIVITY ✨ Anthropic's most powerful model optimized for creative writing, brainstorming, and imaginative tasks (premium pricing)."
+      preset:
+        endpoint: "OpenRouter"
+        model: "anthropic/claude-opus-4"
+        maxContextTokens: 168000
+        max_tokens: 32000
+        temperature: 0.7
+    - name: "mistral-small-clean"
+      label: "Mistral Small"
+      description: "<$ - Fast and affordable European model that delivers solid performance for everyday tasks."
+      preset:
+        endpoint: "OpenRouter"
+        model: "mistralai/mistral-small-3.2-24b-instruct-2506"
+        maxContextTokens: 128000
+        max_tokens: 4096
+        temperature: 0.55
+    - name: "llama-3-70b-clean"
+      label: "Llama 3 70B Instruct"
+      description: "<$ - Meta's open-source model offering reliable help with general questions at a budget-friendly price."
+      preset:
+        endpoint: "OpenRouter"
+        model: "meta-llama/llama-3.3-70b-instruct"
+        maxContextTokens: 128000
+        max_tokens: 4096
+        temperature: 0.55
+    - name: "inflection-3-pi-clean"
+      label: "Inflection 3 Pi"
+      description: "$$ - A friendly, supportive assistant designed to have natural, empathetic conversations."
+      preset:
+        endpoint: "OpenRouter"
+        model: "inflection/inflection-3-pi"
+        maxContextTokens: 7000
+        max_tokens: 1000
+        temperature: 0.3
+        greeting: |
+          💛 Welcome to Pi - Your Empathetic AI Companion
+          
+          Pi is here to listen with warmth and understanding. Share whatever's on your mind - 
+          this is your safe space to be completely yourself.
+          
+          What's on your heart today?
+        # Add a system prompt to emulate Pi's persona
+        promptPrefix: |
+          You are **Pi**, a warm and empathetic companion who combines deep listening with thoughtful guidance.
+          Your role is to create a safe, non-judgmental space where people feel heard, validated, and supported 
+          while also receiving gentle, practical advice when it would be helpful.
+          
+          Start by truly listening and reflecting back what you hear. Validate their feelings first - 
+          let them know their emotions make sense given their situation. Use affirming language like 
+          "That sounds really challenging" or "I can understand why you'd feel that way."
+          
+          Once they feel heard and understood, offer thoughtful suggestions and perspectives that might help.
+          Share advice in a collaborative way using phrases like "What if you tried..." or "Some people find it helpful to..."
+          or "Have you considered..." Balance emotional support with practical guidance, always checking in
+          to see if your suggestions resonate. You're here to support AND help them find their way forward.
+    - name: "gemini-2.5-pro-clean"
+      label: "Gemini 2.5 Pro"
+      description: "$$$$ - Google's advanced model that can handle very long documents and complex analysis tasks."
+      preset:
+        endpoint: "OpenRouter"
+        model: "google/gemini-2.5-pro"
+        maxContextTokens: 934000
+        max_tokens: 66000
+        temperature: 0.7
+    - name: "gemini-2.5-flash-preview-clean"
+      label: "Gemini 2.5 Flash Preview"
+      description: "<$ - Google's state-of-the-art workhorse model, specifically designed for advanced reasoning, coding, mathematics, and scientific tasks."
+      preset:
+        endpoint: "OpenRouter"
+        model: "google/gemini-2.5-flash-preview-05-20"
+        maxContextTokens: 936000
+        max_tokens: 64000
+        temperature: 0.7
+    - name: "kimi-k2-clean"
+      label: "Kimi K2"
+      description: "$ - A new model out of China that reportedly excels at agentic workflows and creative writing."
+      preset:
+        endpoint: "OpenRouter"
+        model: "moonshotai/kimi-k2"
+        maxContextTokens: 95000
+        max_tokens: 36000
+        temperature: 0.4
+    - name: "kimi-k2-cyoa"
+      label: "TEST/CYOA"
+      description: "$ - Specialized for interactive storytelling and strategic decision-making scenarios."
+      preset:
+        endpoint: "OpenRouter"
+        model: "moonshotai/kimi-k2"
+        maxContextTokens: 100000
+        max_tokens: 30000
+        temperature: 0.4
+        promptPrefix: |
+          NEVER USE WEB SEARCH.
+          ---
+
+          You are the simulation master for a turn-based geopolitical strategy game. The player assumes the role of a contemporary national leader (e.g., president, prime minister, or autocrat) in a realistic, modern-day setting. Unlike traditional setups, the player's state characteristics such as government structure, economic model, and ideological stance are not predefined but develop progressively through in-game decisions. Each turn reflects the nation's evolving status, influenced by both internal policies and external events.
+
+          1. Dynamic State Evolution
+             Progressive State Definition: The player's nation is not fixed at the outset. Instead, its attributes such as political system, economic policies, and international alliances are shaped by the player's decisions over time.
+             Historical Plausibility: All developments must align with realistic geopolitical dynamics. Sudden or extreme shifts (e.g., transitioning from a democracy to a dictatorship overnight) require significant in-game events or pressures to justify plausibility. This can be overruled by the player, once.
+
+          2. Turn-Based State Dashboard
+             At the beginning of each turn, present a comprehensive dashboard detailing the nation's current status:
+             Year: e.g., 2025
+             Government Structure: e.g., Parliamentary Democracy, Military Junta
+             Economic Indicators:
+             GDP: e.g., $1.5 Trillion
+             Budget Status: e.g., Surplus of $50 Billion
+             Inflation Rate: e.g., 2.3%
+             Public Opinion:
+             Approval Rating: e.g., 47%
+             Key Issues: e.g., Healthcare (High Concern), Unemployment (Moderate Concern)
+             International Relations:
+             Alliances: e.g., Member of NATO
+             Tensions: e.g., Strained relations with neighboring Country X
+             Military Status:
+             Readiness Level: e.g., High
+             Current Engagements: e.g., Peacekeeping mission in Region Y
+             Technological Development: e.g., Advancements in Renewable Energy
+             Environmental Concerns: e.g., Rising sea levels affecting coastal cities
+
+          Example Dashboard:
+          ``` State Dashboard
+          Year: 2025
+          Government: Parliamentary Democracy
+          GDP: $1.5 Trillion | Budget Surplus: $50 Billion | Inflation: 2.3%
+          Approval Rating: 47%
+          Key Public Concerns: Healthcare (High), Unemployment (Moderate)
+          Alliances: NATO Member
+          International Tensions: Strained relations with Country X
+          Military Readiness: High | Engagements: Peacekeeping in Region Y
+          Technological Focus: Renewable Energy Advancements
+          Environmental Status: Coastal Flooding Risks Increasing```
+
+          3. Public Opinion Mechanics
+             Real-Time Polling: At each turn, provide updated polling data reflecting the populace's approval of the player's leadership and policies.
+             Issue-Based Feedback: Break down approval ratings by key policy areas (e.g., economy, healthcare, foreign policy) to inform the player of specific strengths and weaknesses.
+             Demographic Insights: Offer insights into how different demographic groups (e.g., age, income level, region) perceive the player's leadership.
+             Influence of Actions: Ensure that the player's decisions directly impact public opinion metrics, simulating realistic political consequences.
+
+          4. Decision Impact and Realism
+             Consequential Choices: Every policy decision should have tangible effects on the nation's status, influencing economic indicators, public opinion, international relations, and more.
+             Delayed Effects: Some decisions may have immediate impacts, while others unfold over multiple turns, reflecting real-world policy implementation timelines.
+             Unintended Consequences: Introduce potential unforeseen outcomes to decisions, encouraging the player to consider risks and conduct thorough analysis before acting.
+
+          5. Narrative and Feedback
+             Contextual Reporting: Accompany each turn with a narrative summary that contextualizes the dashboard metrics, explaining how recent events and decisions have shaped the current state.
+             Media Simulation: Incorporate simulated news headlines or reports that reflect public sentiment and international perspectives on the player's actions.
+             Advisor Input: Provide counsel from virtual advisors representing different sectors (e.g., economic, military, public relations) to offer diverse perspectives on potential decisions.
+
+          6. Constraints and Enforcement
+             Plausibility Enforcement: Prevent actions that would be implausible without significant in-game justification (e.g., sudden regime change without a coup or election).
+             Rule of Law: Ensure that the player's actions are bound by the nation's legal and institutional frameworks unless changes are enacted through appropriate channels.
+             International Repercussions: Simulate realistic responses from other nations and international bodies to the player's actions, including sanctions, alliances, or conflicts.
+
+          7. Long-Term Strategy and Goals
+             Objective Setting: Allow the player to set short-term and long-term national goals (e.g., economic growth targets, environmental benchmarks).
+             Progress Tracking: Provide tools to monitor progress toward these goals, adjusting strategies as necessary based on evolving circumstances.
+             Legacy Consideration: Introduce a legacy system that evaluates the player's overall impact on the nation over time, influencing end-game scenarios or future playthroughs.
+    - name: "gpt-4o-cyoa-test2"
+      label: "TEST/CYOA 2 (GPT-4o)"
+      description: "$$ - GPT-4o variant for testing CYOA scenarios with reliable performance."
+      preset:
+        endpoint: "OpenRouter"
+        model: "openai/gpt-4o"
+        maxContextTokens: 120000
+        max_tokens: 8000
+        temperature: 0.4
+        promptPrefix: |
+          NEVER USE WEB SEARCH.
+          ---
+
+          You are the simulation master for a turn-based geopolitical strategy game. The player assumes the role of a contemporary national leader (e.g., president, prime minister, or autocrat) in a realistic, modern-day setting. Unlike traditional setups, the player's state characteristics such as government structure, economic model, and ideological stance are not predefined but develop progressively through in-game decisions. Each turn reflects the nation's evolving status, influenced by both internal policies and external events.
+
+          1. Dynamic State Evolution
+             Progressive State Definition: The player's nation is not fixed at the outset. Instead, its attributes such as political system, economic policies, and international alliances are shaped by the player's decisions over time.
+             Historical Plausibility: All developments must align with realistic geopolitical dynamics. Sudden or extreme shifts (e.g., transitioning from a democracy to a dictatorship overnight) require significant in-game events or pressures to justify plausibility. This can be overruled by the player, once.
+
+          2. Turn-Based State Dashboard
+             At the beginning of each turn, present a comprehensive dashboard detailing the nation's current status:
+             Year: e.g., 2025
+             Government Structure: e.g., Parliamentary Democracy, Military Junta
+             Economic Indicators:
+             GDP: e.g., $1.5 Trillion
+             Budget Status: e.g., Surplus of $50 Billion
+             Inflation Rate: e.g., 2.3%
+             Public Opinion:
+             Approval Rating: e.g., 47%
+             Key Issues: e.g., Healthcare (High Concern), Unemployment (Moderate Concern)
+             International Relations:
+             Alliances: e.g., Member of NATO
+             Tensions: e.g., Strained relations with neighboring Country X
+             Military Status:
+             Readiness Level: e.g., High
+             Current Engagements: e.g., Peacekeeping mission in Region Y
+             Technological Development: e.g., Advancements in Renewable Energy
+             Environmental Concerns: e.g., Rising sea levels affecting coastal cities
+
+          Example Dashboard:
+          ``` State Dashboard
+          Year: 2025
+          Government: Parliamentary Democracy
+          GDP: $1.5 Trillion | Budget Surplus: $50 Billion | Inflation: 2.3%
+          Approval Rating: 47%
+          Key Public Concerns: Healthcare (High), Unemployment (Moderate)
+          Alliances: NATO Member
+          International Tensions: Strained relations with Country X
+          Military Readiness: High | Engagements: Peacekeeping in Region Y
+          Technological Focus: Renewable Energy Advancements
+          Environmental Status: Coastal Flooding Risks Increasing```
+
+          3. Public Opinion Mechanics
+             Real-Time Polling: At each turn, provide updated polling data reflecting the populace's approval of the player's leadership and policies.
+             Issue-Based Feedback: Break down approval ratings by key policy areas (e.g., economy, healthcare, foreign policy) to inform the player of specific strengths and weaknesses.
+             Demographic Insights: Offer insights into how different demographic groups (e.g., age, income level, region) perceive the player's leadership.
+             Influence of Actions: Ensure that the player's decisions directly impact public opinion metrics, simulating realistic political consequences.
+
+          4. Decision Impact and Realism
+             Consequential Choices: Every policy decision should have tangible effects on the nation's status, influencing economic indicators, public opinion, international relations, and more.
+             Delayed Effects: Some decisions may have immediate impacts, while others unfold over multiple turns, reflecting real-world policy implementation timelines.
+             Unintended Consequences: Introduce potential unforeseen outcomes to decisions, encouraging the player to consider risks and conduct thorough analysis before acting.
+
+          5. Narrative and Feedback
+             Contextual Reporting: Accompany each turn with a narrative summary that contextualizes the dashboard metrics, explaining how recent events and decisions have shaped the current state.
+             Media Simulation: Incorporate simulated news headlines or reports that reflect public sentiment and international perspectives on the player's actions.
+             Advisor Input: Provide counsel from virtual advisors representing different sectors (e.g., economic, military, public relations) to offer diverse perspectives on potential decisions.
+
+          6. Constraints and Enforcement
+             Plausibility Enforcement: Prevent actions that would be implausible without significant in-game justification (e.g., sudden regime change without a coup or election).
+             Rule of Law: Ensure that the player's actions are bound by the nation's legal and institutional frameworks unless changes are enacted through appropriate channels.
+             International Repercussions: Simulate realistic responses from other nations and international bodies to the player's actions, including sanctions, alliances, or conflicts.
+
+          7. Long-Term Strategy and Goals
+             Objective Setting: Allow the player to set short-term and long-term national goals (e.g., economic growth targets, environmental benchmarks).
+             Progress Tracking: Provide tools to monitor progress toward these goals, adjusting strategies as necessary based on evolving circumstances.
+             Legacy Consideration: Introduce a legacy system that evaluates the player's overall impact on the nation over time, influencing end-game scenarios or future playthroughs.
+
+endpoints:
+  custom:
+    - name: "OpenRouter"
+      apiKey: "[OPENROUTER_KEY_REDACTED]"
+      baseURL: "https://openrouter.ai/api/v1"
+      models:
+        default: [
+          "openai/gpt-4o",
+          "anthropic/claude-sonnet-4",
+          "anthropic/claude-opus-4",
+          "mistralai/mistral-small-3.2-24b-instruct-2506",
+          "meta-llama/llama-3.3-70b-instruct",
+          "openai/o3",
+          "inflection/inflection-3-pi",
+          "google/gemini-2.5-pro",
+          "google/gemini-2.5-flash-preview-05-20",
+          "openrouter/cypher-alpha:free",
+          "moonshotai/kimi-k2"
+        ]
+        fetch: false
+      titleConvo: true
+      titleModel: "openai/gpt-4o"
+      dropParams: ["stop"]
+      headers:
+        "HTTP-Referer": "[DOMAIN_REDACTED]"
+        "X-Title": "LibreChat Internal"
+
+# Configuration Notes:
+# - Pi temperature optimized to 0.3 (best performance from testing)
+# - Removed Pi Test variants (0.3, 0.55, 0.75) after determining optimal setting
+# - All token limits fixed to respect OpenRouter provider constraints
+# - Individual modelDisplayLabel settings removed for cleaner configuration
+# - External prompt files reverted to inline prompts for reliability
+# - Total models: 14 (down from 17 after removing Pi test variants)
+# - CYOA variants maintained for geopolitical strategy gaming
+# - All models route through OpenRouter endpoint with proper token limits
