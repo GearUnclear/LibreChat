@@ -69,6 +69,10 @@ bower_components/
 #config file
 librechat.yaml
 librechat.yml
+librechat.yaml.backup*
+librechat.yaml.backup.*
+*.backup
+*.backup.*
 
 # Environment
 .npmrc
