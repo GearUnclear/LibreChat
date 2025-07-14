@@ -1,172 +1,147 @@
-# LibreChat
+# LibreChat Quick Reference for Claude
 
-## Project Overview
+Essential day-to-day commands and information for managing this LibreChat deployment.
 
-LibreChat is a monorepo with the following key workspaces:
+## 🚀 Service Management
 
-| Workspace | Language | Side | Dependency | Purpose |
-|---|---|---|---|---|
-| `/api` | JS (legacy) | Backend | `packages/api`, `packages/data-schemas`, `packages/data-provider`, `@librechat/agents` | Express server — minimize changes here |
-| `/packages/api` | **TypeScript** | Backend | `packages/data-schemas`, `packages/data-provider` | New backend code lives here (TS only, consumed by `/api`) |
-| `/packages/data-schemas` | TypeScript | Backend | `packages/data-provider` | Database models/schemas, shareable across backend projects |
-| `/packages/data-provider` | TypeScript | Shared | — | Shared API types, endpoints, data-service — used by both frontend and backend |
-| `/client` | TypeScript/React | Frontend | `packages/data-provider`, `packages/client` | Frontend SPA |
-| `/packages/client` | TypeScript | Frontend | `packages/data-provider` | Shared frontend utilities |
+### Restart Service (After Config Changes)
+```bash
+docker-compose -f /opt/LibreChat/docker-compose.yml -f /opt/LibreChat/docker-compose.override.yml down
+docker-compose -f /opt/LibreChat/docker-compose.yml -f /opt/LibreChat/docker-compose.override.yml up -d
+```
 
-The source code for `@librechat/agents` (major backend dependency, same team) is at `/home/danny/agentus`.
+### Quick Container Restart
+```bash
+docker restart LibreChat
+```
 
----
+### Check Service Status
+```bash
+docker-compose -f /opt/LibreChat/docker-compose.yml -f /opt/LibreChat/docker-compose.override.yml ps
+docker logs LibreChat --tail 20
+```
 
-## Workspace Boundaries
+### Update LibreChat Version
+```bash
+# Pull latest pre-built image
+docker pull ghcr.io/danny-avila/librechat-dev:latest
 
-- **All new backend code must be TypeScript** in `/packages/api`.
-- Keep `/api` changes to the absolute minimum (thin JS wrappers calling into `/packages/api`).
-- Database-specific shared logic goes in `/packages/data-schemas`.
-- Frontend/backend shared API logic (endpoints, types, data-service) goes in `/packages/data-provider`.
-- Build data-provider from project root: `npm run build:data-provider`.
+# Restart with new image
+docker-compose -f /opt/LibreChat/docker-compose.yml -f /opt/LibreChat/docker-compose.override.yml up -d
+```
 
----
+**Note**: This deployment uses pre-built Docker images (`ghcr.io/danny-avila/librechat-dev:latest`), not local source builds. To get the latest version, pull the updated image rather than rebuilding from source.
 
-## Code Style
+## 📋 Configuration Files
 
-### Naming and File Organization
+### Critical Files (NOT in Git)
+- **`librechat.yaml`** - Main model configuration
+- **`.env`** - API keys and secrets  
+- **`docker-compose.override.yml`** - Volume mounts
+- **`prompts/`** - External prompt files
 
-- **Single-word file names** whenever possible (e.g., `permissions.ts`, `capabilities.ts`, `service.ts`).
-- When multiple words are needed, prefer grouping related modules under a **single-word directory** rather than using multi-word file names (e.g., `admin/capabilities.ts` not `adminCapabilities.ts`).
-- The directory already provides context — `app/service.ts` not `app/appConfigService.ts`.
+### Adding New Models
+Edit `librechat.yaml` → `modelSpecs.list`:
+```yaml
+- name: "new-model-clean"
+  label: "New Model"
+  description: "$ - Description here"
+  preset:
+    endpoint: "OpenRouter"
+    model: "provider/model-name"
+    maxContextTokens: 131000
+    max_tokens: 131000
+    temperature: 0.4
+```
 
-### Structure and Clarity
+### External Prompts
+Store in `/opt/LibreChat/prompts/filename.txt` and reference:
+```yaml
+promptPrefix: "file:///opt/LibreChat/prompts/filename.txt"
+```
 
-- **Never-nesting**: early returns, flat code, minimal indentation. Break complex operations into well-named helpers.
-- **Functional first**: pure functions, immutable data, `map`/`filter`/`reduce` over imperative loops. Only reach for OOP when it clearly improves domain modeling or state encapsulation.
-- **No dynamic imports** unless absolutely necessary.
+## 👥 User Management
 
-### DRY
+### Common Commands
+```bash
+# List users
+docker exec LibreChat npm run list-users
 
-- Extract repeated logic into utility functions.
-- Reusable hooks / higher-order components for UI patterns.
-- Parameterized helpers instead of near-duplicate functions.
-- Constants for repeated values; configuration objects over duplicated init code.
-- Shared validators, centralized error handling, single source of truth for business rules.
-- Shared typing system with interfaces/types extending common base definitions.
-- Abstraction layers for external API interactions.
+# Create user
+docker exec LibreChat npm run create-user
 
-### Iteration and Performance
+# Reset password
+docker exec LibreChat npm run reset-password
 
-- **Minimize looping** — especially over shared data structures like message arrays, which are iterated frequently throughout the codebase. Every additional pass adds up at scale.
-- Consolidate sequential O(n) operations into a single pass whenever possible; never loop over the same collection twice if the work can be combined.
-- Choose data structures that reduce the need to iterate (e.g., `Map`/`Set` for lookups instead of `Array.find`/`Array.includes`).
-- Avoid unnecessary object creation; consider space-time tradeoffs.
-- Prevent memory leaks: careful with closures, dispose resources/event listeners, no circular references.
+# User statistics
+docker exec LibreChat npm run user-stats
+```
 
-### Type Safety
+**Important**: ALL user commands must run with `docker exec LibreChat`
 
-- **Never use `any`**. Explicit types for all parameters, return values, and variables.
-- **Limit `unknown`** — avoid `unknown`, `Record<string, unknown>`, and `as unknown as T` assertions. A `Record<string, unknown>` almost always signals a missing explicit type definition.
-- **Don't duplicate types** — before defining a new type, check whether it already exists in the project (especially `packages/data-provider`). Reuse and extend existing types rather than creating redundant definitions.
-- Use union types, generics, and interfaces appropriately.
-- All TypeScript and ESLint warnings/errors must be addressed — do not leave unresolved diagnostics.
+## 🔍 Troubleshooting
 
-### Comments and Documentation
+### Check Configuration Loading
+```bash
+docker logs LibreChat | grep "Custom config file loaded"
+```
 
-- Write self-documenting code; no inline comments narrating what code does.
-- JSDoc only for complex/non-obvious logic or intellisense on public APIs.
-- Single-line JSDoc for brief docs, multi-line for complex cases.
-- Avoid standalone `//` comments unless absolutely necessary.
+### Common Issues
+- **Config not loading**: Include override file in commands
+- **Model missing**: Check `modelSpecs.enforce: true` 
+- **User commands fail**: Must run inside container with `docker exec`
 
-### Import Order
+### Health Check
+```bash
+# All services running
+docker-compose ps
 
-Imports are organized into three sections:
+# LibreChat responding  
+curl -f http://localhost:3080 || echo "Service down"
+```
 
-1. **Package imports** — sorted shortest to longest line length (`react` always first).
-2. **`import type` imports** — sorted longest to shortest (package types first, then local types; length resets between sub-groups).
-3. **Local/project imports** — sorted longest to shortest.
+## 📁 Current Setup
 
-Multi-line imports count total character length across all lines. Consolidate value imports from the same module. Always use standalone `import type { ... }` — never inline `type` inside value imports.
+### Site URL
+https://ai.wagenhoffer.dev
 
-### JS/TS Loop Preferences
+### Container Names
+- **LibreChat**: `LibreChat`
+- **MongoDB**: `chat-mongodb` 
+- **MeiliSearch**: `chat-meilisearch`
 
-- **Limit looping as much as possible.** Prefer single-pass transformations and avoid re-iterating the same data.
-- `for (let i = 0; ...)` for performance-critical or index-dependent operations.
-- `for...of` for simple array iteration.
-- `for...in` only for object property enumeration.
+### Data Locations
+- **Config**: `/opt/LibreChat/librechat.yaml`
+- **Prompts**: `/opt/LibreChat/prompts/`
+- **Database**: `/opt/LibreChat/data-node/`
+- **Logs**: `/opt/LibreChat/logs/`
 
----
+## 🔄 Git Management
 
-## Frontend Rules (`client/src/**/*`)
+### Current Setup
+- **Fork**: `git@github.com:GearUnclear/LibreChat.git`
+- **Upstream**: `https://github.com/danny-avila/LibreChat.git`
 
-### Localization
+### Sync with Upstream
+```bash
+# Pull latest changes from upstream
+git pull upstream main --rebase
 
-- All user-facing text must use `useLocalize()`.
-- Only update English keys in `client/src/locales/en/translation.json` (other languages are automated externally).
-- Semantic key prefixes: `com_ui_`, `com_assistants_`, etc.
+# Force push to your fork (after rebase)
+git push origin main --force-with-lease
+```
 
-### Components
+### User Documentation
+- **Location**: `/opt/LibreChat/User_Docs/`
+- **Files**: DEPLOYMENT-README.md, tempguide.md, ISSUES-MODEL-GROUPING.md
 
-- TypeScript for all React components with proper type imports.
-- Semantic HTML with ARIA labels (`role`, `aria-label`) for accessibility.
-- Group related components in feature directories (e.g., `SidePanel/Memories/`).
-- Use index files for clean exports.
+## ⚠️ Critical Reminders
 
-### Data Management
-
-- Feature hooks: `client/src/data-provider/[Feature]/queries.ts` → `[Feature]/index.ts` → `client/src/data-provider/index.ts`.
-- React Query (`@tanstack/react-query`) for all API interactions; proper query invalidation on mutations.
-- QueryKeys and MutationKeys in `packages/data-provider/src/keys.ts`.
-
-### Data-Provider Integration
-
-- Endpoints: `packages/data-provider/src/api-endpoints.ts`
-- Data service: `packages/data-provider/src/data-service.ts`
-- Types: `packages/data-provider/src/types/queries.ts`
-- Use `encodeURIComponent` for dynamic URL parameters.
-
-### Performance
-
-- Prioritize memory and speed efficiency at scale.
-- Cursor pagination for large datasets.
-- Proper dependency arrays to avoid unnecessary re-renders.
-- Leverage React Query caching and background refetching.
-
----
-
-## Development Commands
-
-| Command | Purpose |
-|---|---|
-| `npm run smart-reinstall` | Install deps (if lockfile changed) + build via Turborepo |
-| `npm run reinstall` | Clean install — wipe `node_modules` and reinstall from scratch |
-| `npm run backend` | Start the backend server |
-| `npm run backend:dev` | Start backend with file watching (development) |
-| `npm run build` | Build all compiled code via Turborepo (parallel, cached) |
-| `npm run frontend` | Build all compiled code sequentially (legacy fallback) |
-| `npm run frontend:dev` | Start frontend dev server with HMR (port 3090, requires backend running) |
-| `npm run build:data-provider` | Rebuild `packages/data-provider` after changes |
-
-- Node.js: v20.19.0+ or ^22.12.0 or >= 23.0.0
-- Database: MongoDB
-- Backend runs on `http://localhost:3080/`; frontend dev server on `http://localhost:3090/`
+1. **Always include override file** in docker-compose commands
+2. **Config changes require full restart** (not just container restart)
+3. **User commands must run inside container** 
+4. **Critical files are NOT in git** - backup separately
+5. **External prompts** keep YAML clean and manageable
 
 ---
-
-## Testing
-
-- Framework: **Jest**, run per-workspace.
-- Run tests from their workspace directory: `cd api && npx jest <pattern>`, `cd packages/api && npx jest <pattern>`, etc.
-- Frontend tests: `__tests__` directories alongside components; use `test/layout-test-utils` for rendering.
-- Cover loading, success, and error states for UI/data flows.
-
-### Philosophy
-
-- **Real logic over mocks.** Exercise actual code paths with real dependencies. Mocking is a last resort.
-- **Spies over mocks.** Assert that real functions are called with expected arguments and frequency without replacing underlying logic.
-- **MongoDB**: use `mongodb-memory-server` for a real in-memory MongoDB instance. Test actual queries and schema validation, not mocked DB calls.
-- **MCP**: use real `@modelcontextprotocol/sdk` exports for servers, transports, and tool definitions. Mirror real scenarios, don't stub SDK internals.
-- Only mock what you cannot control: external HTTP APIs, rate-limited services, non-deterministic system calls.
-- Heavy mocking is a code smell, not a testing strategy.
-
----
-
-## Formatting
-
-Fix all formatting lint errors (trailing spaces, tabs, newlines, indentation) using auto-fix when available. All TypeScript/ESLint warnings and errors **must** be resolved.
+*This is a Claude-generated quick reference. For full details see User_Docs/DEPLOYMENT-README.md*

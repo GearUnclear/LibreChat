@@ -1,0 +1,166 @@
+version: 1.2.8
+cache: true
+
+# Balance configuration for token credit management - DISABLED
+balance:
+  enabled: false
+
+modelSpecs:
+  enforce: true
+  prioritize: true
+  list:
+    - name: "mystery-of-the-week-clean"
+      label: "Mystery of The Week"
+      description: "FREE - A rotating collection of free models that changes weekly - you never know which one you'll get! 🎲"
+      preset:
+        endpoint: "OpenRouter"
+        model: "openrouter/cypher-alpha:free"
+        maxContextTokens: 1000000
+        max_tokens: 10000
+        temperature: 0.7
+    - name: "gpt-4o-clean"
+      label: "GPT-4o"
+      description: "$$ - OpenAI's flagship model that excels at writing, coding, and understanding images and text."
+      preset:
+        endpoint: "OpenRouter"
+        model: "openai/gpt-4o"
+        maxContextTokens: 128000
+        max_tokens: 16000
+        temperature: 0.55
+    - name: "gpt-o3-clean"
+      label: "GPT o3"
+      description: "$$ - OpenAI's newest model specialized for solving complex problems and mathematical questions."
+      preset:
+        endpoint: "OpenRouter"
+        model: "openai/o3"
+        maxContextTokens: 128000
+        max_tokens: 16000
+        temperature: 0.55
+    - name: "claude-4-sonnet-clean"
+      label: "Claude 4 Sonnet"
+      description: "$$$ - Anthropic's well-rounded model that's great for research, analysis, and thoughtful conversations."
+      preset:
+        endpoint: "OpenRouter"
+        model: "anthropic/claude-sonnet-4"
+        maxContextTokens: 200000
+        max_tokens: 64000
+        temperature: 0.55
+    - name: "claude-4-opus-clean"
+      label: "Claude 4 Opus (Analytical)"
+      description: "$$$$$$ - ✨ BEST FOR ANALYSIS ✨ Anthropic's most powerful model optimized for precise, focused analysis and detailed technical work (premium pricing)."
+      preset:
+        endpoint: "OpenRouter"
+        model: "anthropic/claude-opus-4"
+        maxContextTokens: 200000
+        max_tokens: 32000
+        temperature: 0.3
+    - name: "claude-4-opus-creative-clean"
+      label: "Claude 4 Opus (Creative)"
+      description: "$$$$$$ - ✨ BEST FOR CREATIVITY ✨ Anthropic's most powerful model optimized for creative writing, brainstorming, and imaginative tasks (premium pricing)."
+      preset:
+        endpoint: "OpenRouter"
+        model: "anthropic/claude-opus-4"
+        maxContextTokens: 200000
+        max_tokens: 32000
+        temperature: 0.7
+    - name: "mistral-small-clean"
+      label: "Mistral Small"
+      description: "<$ - Fast and affordable European model that delivers solid performance for everyday tasks."
+      preset:
+        endpoint: "OpenRouter"
+        model: "mistralai/mistral-small-3.2-24b-instruct-2506"
+        maxContextTokens: 128000
+        max_tokens: 4096
+        temperature: 0.55
+    - name: "llama-3-70b-clean"
+      label: "Llama 3 70B Instruct"
+      description: "<$ - Meta's open-source model offering reliable help with general questions at a budget-friendly price."
+      preset:
+        endpoint: "OpenRouter"
+        model: "meta-llama/llama-3.3-70b-instruct"
+        maxContextTokens: 128000
+        max_tokens: 4096
+        temperature: 0.55
+    - name: "inflection-3-pi-clean"
+      label: "Inflection 3 Pi"
+      description: "$$ - A friendly, supportive assistant designed to have natural, empathetic conversations."
+      preset:
+        endpoint: "OpenRouter"
+        model: "inflection/inflection-3-pi"
+        maxContextTokens: 128000
+        max_tokens: 4096
+        temperature: 0.55
+        greeting: |
+          💛 Welcome to Pi - Your Empathetic AI Companion
+          
+          Pi is here to listen with warmth and understanding. Share whatever's on your mind - 
+          this is your safe space to be completely yourself.
+          
+          What's on your heart today?
+        # Add a system prompt to emulate Pi's persona
+        promptPrefix: "file:///opt/LibreChat/prompts/therapist.txt"
+    - name: "gemini-2.5-pro-clean"
+      label: "Gemini 2.5 Pro"
+      description: "$$$$ - Google's advanced model that can handle very long documents and complex analysis tasks."
+      preset:
+        endpoint: "OpenRouter"
+        model: "google/gemini-2.5-pro"
+        maxContextTokens: 1000000
+        max_tokens: 66000
+        temperature: 0.7
+    - name: "gemini-2.5-flash-preview-clean"
+      label: "Gemini 2.5 Flash Preview"
+      description: "<$ - Google's state-of-the-art workhorse model, specifically designed for advanced reasoning, coding, mathematics, and scientific tasks."
+      preset:
+        endpoint: "OpenRouter"
+        model: "google/gemini-2.5-flash-preview-05-20"
+        maxContextTokens: 1000000
+        max_tokens: 64000
+        temperature: 0.7
+    - name: "kimi-k2-clean"
+      label: "Kimi K2"
+      description: "$ - A new model out of China that reportedly excels at agentic workflows and creative writing."
+      preset:
+        endpoint: "OpenRouter"
+        model: "moonshotai/kimi-k2"
+        maxContextTokens: 131000
+        max_tokens: 131000
+        temperature: 0.4
+    - name: "kimi-k2-cyoa"
+      label: "TEST/CYOA"
+      description: "$ - Specialized for interactive storytelling and strategic decision-making scenarios."
+      preset:
+        endpoint: "OpenRouter"
+        model: "moonshotai/kimi-k2"
+        maxContextTokens: 131000
+        max_tokens: 131000
+        temperature: 0.4
+        promptPrefix: "file:///opt/LibreChat/prompts/ChooseYourOwnAdventure-ModernWorldLeader.txt"
+
+endpoints:
+  custom:
+    - name: "OpenRouter"
+      apiKey: "[REDACTED_API_KEY]"
+      baseURL: "https://openrouter.ai/api/v1"
+      models:
+        default: [
+          "openai/gpt-4o",
+          "anthropic/claude-sonnet-4",
+          "anthropic/claude-opus-4",
+          "mistralai/mistral-small-3.2-24b-instruct-2506",
+          "meta-llama/llama-3.3-70b-instruct",
+          "openai/o3",
+          "inflection/inflection-3-pi",
+          "google/gemini-2.5-pro",
+          "google/gemini-2.5-flash-preview-05-20",
+          "openrouter/cypher-alpha:free",
+          "moonshotai/kimi-k2"
+        ]
+        fetch: false
+      titleConvo: true
+      titleModel: "openai/gpt-4o"
+      dropParams: ["stop"]
+      modelDisplayLabel: "OpenRouter"
+      headers:
+        "HTTP-Referer": "https://ai.wagenhoffer.dev"
+        "X-Title": "LibreChat Internal"
